@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Minha Casa</title>
+    </head>
+    <body>
+        
+        {% extends "baseadm.html" %}
+        {% block content %}
+        <h2> BEM VINDO ADM </h2>
+
+        <html>
+    <head>
+        <title>Minha Casa</title>
+    </head>
+    <body>
+        <div class="vertical-center">
+            <div class="container">
+                    <div class="card">
+                        <div class="bg">
+                            <h4>USERS</h4>
+                            <h6>  </h6>
+                            <a href="/userss" class="boton">mais info</a>
+                            </div>
+                                <div class="blob"></div>
+                            </div>
+                            <div class="card">
+                                <div class="bg">
+                                    <h4>SENSORES </h4>
+                                    <h6> </h6>
+                                    <a href="/sensors" class="boton">mais info</a>
+                                </div>
+                                <div class="blob"></div>
+                            </div>
+                            <div class="card">
+                                <div class="bg">
+                                    <h4>ATUADORES</h4>
+                                    <h6> </h6>
+                                    <a href="/actuators" class="boton"> mais info</a>
+                                </div>
+                                <div class="blob"></div>
+                            </div>
+                            <div class="card">
+                                <div class="bg">
+                                    <h4>Enviar dados</h4>
+                                    <h6> </h6>
+                                    <a href="/send"  class="boton">enviar info</a>
+                                </div>
+                                <div class="blob"></div>
+                            </div>
+                            <div class="card">
+                                <div class="bg">
+                                    <h4>Comunicação remota</h4>
+                                    <h6> testar </h6>
+                                    <a href="/centrala" class="boton">mais info</a>
+                                </div>
+                                <div class="blob"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+    </body>
+</html>

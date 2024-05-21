@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Minha Casa</title>
+    </head>
+    <body>
+        
+        {% extends "base.html" %}
+        {% block content %}
+
+        <div class="vertical-center">
+            <div class="container">
+                <div class="card">
+                    <div class="bg">
+                        <h4>Sensores</h4>
+                        <h6> funcionando! </h6>
+                        <a href="/sensorsuser"  class="boton">mais info</a>
+                    </div>
+                    <div class="blob"></div>
+                </div>
+                <div class="card">
+                    <div class="bg">
+                        <h4>Atuadores</h4>
+                        <h6> funcionando! </h6>
+                        <a href="/actuatorsuser"  class="boton" > Acesse aqui</a>
+                    </div>
+                    <div class="blob"></div>
+                </div>
+                <div class="card">
+                    <div class="bg">
+                        <h4>Enviar dados</h4>
+                        <h6> </h6>
+                        <a href="/send"  class="boton">enviar info</a>
+                    </div>
+                    <div class="blob"></div>
+                </div>
+                <div class="card">
+                    <div class="bg">
+                        <h4>Comunicação remota</h4>
+                        <h6> testar </h6>
+                        <a href="/centrala" class="boton">mais info</a>
+                    </div>
+                    <div class="blob"></div>
+                </div>
+                
+                <p>Selecione uma das opções acima!</p>
+            </div>
+        </div>
+        {% endblock %}
+        
+    </body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+</head>
+<body>
+    {% extends "base_login.html" %}
+    {% block content %}
+    <div class="vertical-center">
+        <form action = "http://localhost:8080/validated_user" method = "POST" class="form-login">
+            <p>Usuário:</p>
+            <input type = "text" name = "user"  placeholder="User"  required/>
+            <p>Senha:</p>
+            <input type = "text" name = "password" placeholder="Password" required/>
+            <input type = "submit" value = "Entrar" />
+        </form> 
+    </div>
+    {% endblock %}
+</body>
+</html>
