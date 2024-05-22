@@ -2,11 +2,11 @@ from flask import Flask, render_template, redirect, url_for ,request, json
 from flask_mqtt import Mqtt
 from login import login
 import flask_login
-import models.iot.user
+import models.user.user
 from user import user
 from sensor import sensor
-import models.iot.sensor
-import models.iot.actuator
+import models.iot.sensors
+import models.iot.actuators
 from actuator import actuator
 app = Flask(__name__)
 
@@ -19,9 +19,9 @@ app.register_blueprint(actuator, url_prefix='/')
 app.secret_key = 'd54gdh543trg@!54gdh'
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-users_ = models.iot.user.get_users()
-sensors_=models.iot.sensor.get_sensors()
-atuadores_=models.iot.actuator.get_actuators()
+users_ = models.user.user.get_users()
+sensors_=models.iot.sensors.get_sensors()
+atuadores_=models.iot.actuators.get_actuators()
 
 @app.route('/')
 def index():
@@ -33,7 +33,7 @@ def user_loader(user):
     users = users_
     if user not in users:
         return
-    user_ = models.iot.user.User()
+    user_ = models.user.user.User()
     user_.id = user
     return user_
 
@@ -44,7 +44,7 @@ def request_loader(request):
     users = users_
     if user not in users:
         return
-    user_ = models.iot.user.User()
+    user_ = models.user.user.User()
     user_.id = user
     return user_
 

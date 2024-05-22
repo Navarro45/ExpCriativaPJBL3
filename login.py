@@ -1,9 +1,9 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 import models
-import models.iot.user
+import models.user.user
 login = Blueprint("login",__name__, template_folder="templates")
 
-users = models.iot.user.get_users()
+users = models.user.user.get_users()
 
 @login.route('/register_user')
 def register_user():
@@ -14,11 +14,11 @@ def add_user():
     if request.method == 'POST':
         user = request.form['user']
         password = request.form['password']
-        models.iot.user.add_user(user,password)
+        models.user.user.add_user(user,password)
     else:
         user = request.args.get('user', None)
         password = request.args.get('password', None)
-        models.iot.user.add_user(user,password)
+        models.user.user.add_user(user,password)
         
     return render_template("users.html", devices=users)
 
@@ -31,8 +31,8 @@ def del_user():
     if request.method == 'POST':
         print(request.form)
         user = request.form['user']
-        models.iot.user.remove_user(user)
+        models.user.user.remove_user(user)
     else:
         user = request.args.get('user', None)
-        models.iot.user.remove_user(user)
+        models.user.user.remove_user(user)
     return render_template("users.html", devices=users)

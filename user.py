@@ -1,4 +1,4 @@
-import models.iot.user
+import models.user.user
 import flask_login
 from flask import Blueprint, request, render_template
 
@@ -9,13 +9,13 @@ def validated_user():
     if request.method == 'POST':
         user_id = request.form['user']
         password = request.form['password']
-        users = models.iot.user.get_users()
-        adm = models.iot.user.get_adm()
+        users = models.user.user.get_users()
+        adm = models.user.user.get_adm()
 
         if user_id in adm and adm[user_id] == password:
             return render_template('adm_home.html')
         elif user_id in users and users[user_id] == password:
-            user_ = models.iot.user.User()
+            user_ = models.user.user.User()
             user_.id = user_id
             flask_login.login_user(user_)   
             return render_template('home.html')
@@ -26,7 +26,7 @@ def validated_user():
 
 @user.route('/list_users')
 def list_users():
-    users = models.iot.user.get_users()
+    users = models.user.user.get_users()
     return render_template("users.html", devices=users)
 
 @user.route('/register_user')
@@ -39,7 +39,7 @@ def add_user():
     if request.method == 'POST':
         user = request.form['user']
         password = request.form['password']
-        models.iot.user.add_user(user,password)
+        models.user.user.add_user(user,password)
     else:
         user = request.args.get('user', None)
         password = request.args.get('password', None)
@@ -58,14 +58,14 @@ def del_user():
         user = request.form['user']
     else:
         user = request.args.get('user', None)
-        models.iot.user.remove_user(user)
+        models.user.user.remove_user(user)
     return render_template("users.html", devices=users)
 
 @user.route('/edit_user', methods=['GET', 'POST'])
 def edit_user():
     if request.method == 'GET':
         user_id = request.args.get('user')
-        users = models.iot.user.get_users()
+        users = models.user.user.get_users()
         if user_id in users:
             user_data = {
                 'user': user_id,
@@ -77,6 +77,6 @@ def edit_user():
     elif request.method == 'POST':
         user_id = request.form['user']
         password = request.form['password']
-        models.iot.user.add_user(user_id, password)
-        users = models.iot.user.get_users()
+        models.user.user.add_user(user_id, password)
+        users = models.user.user.get_users()
         return render_template("users.html", devices=users)

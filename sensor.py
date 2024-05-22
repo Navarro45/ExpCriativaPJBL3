@@ -1,8 +1,8 @@
-import models.iot.sensor
+import models.iot.sensors
 from flask import Blueprint, request, render_template
 
 sensor= Blueprint("sensor",__name__, template_folder="templates")
-sensores = models.iot.sensor.get_sensors()
+sensores = models.iot.sensors.get_sensors()
 
 @sensor.route('/list_sensor')
 def list_sensors():
@@ -18,7 +18,7 @@ def add_sensor():
     if request.method == 'POST':
         sensor = request.form['sensor']
         initial_value = request.form['initial_value']
-        models.iot.sensor.add_sensor(sensor,initial_value)
+        models.iot.sensors.add_sensor(sensor,initial_value)
     else:
         sensor = request.args.get('sensor', None)
         initial_value = request.args.get('initial_value', None)
@@ -37,5 +37,5 @@ def del_sensor():
         sensor = request.form['sensor']
     else:
         sensor = request.args.get('sensor', None)
-        models.iot.sensor.remove_sensor(sensor)
+        models.iot.sensors.remove_sensor(sensor)
     return render_template("sensors.html", devices= sensores)
