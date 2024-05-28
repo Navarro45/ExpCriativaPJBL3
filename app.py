@@ -3,17 +3,11 @@ from flask_mqtt import Mqtt
 from login import login
 import flask_login
 import models.user.user
-from user import user
-from sensor import sensor
 import models.iot.sensors
 import models.iot.actuators
-from actuator import actuator
 app = Flask(__name__)
 
-app.register_blueprint(login, url_prefix='/')
-app.register_blueprint(user, url_prefix='/')
-app.register_blueprint(sensor, url_prefix='/')
-app.register_blueprint(actuator, url_prefix='/')
+
 
 
 app.secret_key = 'd54gdh543trg@!54gdh'

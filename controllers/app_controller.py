@@ -11,21 +11,25 @@ from models.iot.write import Write
 
 def create_app():
     app = Flask(__name__,
-    template_folder="./exercicio8/views/",
-    static_folder="./exercicio8/static/",
+    template_folder="./views/",
+    static_folder="./static/",
     root_path="./")
     app.config['TESTING'] = False
     app.config['SECRET_KEY'] = 'generated-secrete-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = instance
-    app.config['MQTT_BROKER_URL'] = 'mqtt-dashboard.com'
-    app.config['MQTT_BROKER_PORT'] = 1883
-    app.config['MQTT_USERNAME'] = '' # Set this item when you need to verify username and password
-    app.config['MQTT_PASSWORD'] = '' # Set this item when you need to verify username and password
-    app.config['MQTT_KEEPALIVE'] = 5000 # Set KeepAlive time in seconds
-    app.config['MQTT_TLS_ENABLED'] = False # If your broker supports TLS, set it True
-    mqtt_client= Mqtt()
+    app.config['MQTT_BROKER_URL'] = 'www.mqtt-dashboard.com'
+    app.config['MQTT_USERNAME'] = 'gp07' 
+    app.config['MQTT_PASSWORD'] = '123123'
+    app.config['MQTT_KEEPALIVE'] = 60 
+    app.config['MQTT_TLS_ENABLED'] = False
+    mqtt_client = Mqtt()
     mqtt_client.init_app(app)
-    topic_subscribe = "/aula_flask/temperature"
+    MQTT_TOPIC_TEMPERATURE = "expcriativatemperatura"
+    MQTT_TOPIC_HUMIDITY = "expcriativahumidade"
+    MQTT_TOPIC_SEND = "expcriativaenviar"
+    MQTT_TOPIC_ALERT = "expcriativaalert"
+    app.register_blueprint(login_, url_prefix='/')
+    app.register_blueprint(user_, url_prefix='/')
     app.register_blueprint(sensor_, url_prefix='/')
     app.register_blueprint(actuator_, url_prefix='/')
     app.register_blueprint(read, url_prefix='/')
