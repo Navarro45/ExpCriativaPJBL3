@@ -1,9 +1,9 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 import models
-import models.user.user
+from models.user.user import User
 login = Blueprint("login",__name__, template_folder="templates")
 
-users = models.user.user.get_users()
+users = User.get_users()
 
 @login.route('/register_user')
 def register_user():
