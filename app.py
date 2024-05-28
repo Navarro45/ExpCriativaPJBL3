@@ -145,6 +145,7 @@ def sobre():
 @app.route('/admhome')
 def admhome():
     return render_template("adm_home.html")
+
 @app.route('/home')
 def home():
     return render_template("home.html")

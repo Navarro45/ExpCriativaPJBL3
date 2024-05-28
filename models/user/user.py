@@ -1,13 +1,5 @@
 import flask_login
-
-users = {
-"user1":"1234",
-"user2":"12345"
-}
-
-adm ={"adm": "adm1"}
-    
-
+from models.db import db
 
 class User(flask_login.UserMixin):
     def get_adm():
