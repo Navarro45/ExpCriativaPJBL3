@@ -5,17 +5,10 @@ import flask_login
 import models.user.user
 import models.iot.sensors
 import models.iot.actuators
-app = Flask(__name__)
 
-
-
-
-app.secret_key = 'd54gdh543trg@!54gdh'
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 users_ = models.user.user.get_users()
-sensors_=models.iot.sensors.get_sensors()
-atuadores_=models.iot.actuators.get_actuators()
 
 @app.route('/')
 def index():
@@ -79,13 +72,9 @@ def admhome():
     return render_template("adm_home.html")
 
 
-
-
 @app.route('/centrala')
 def centrala():
     return render_template("centrala.html")
-
-
 
 @app.route('/userss')
 def userss():
