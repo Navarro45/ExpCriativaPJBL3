@@ -2,7 +2,8 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from models.iot.sensors import Sensor
 
 
-sensors_ = Blueprint("sensor_",__name__, template_folder="views")
+sensors_ = Blueprint("sensors_",__name__, template_folder="views")
+sensores = Sensor.get_sensors()
 
 @sensors_.route('/register_sensor')
 def register_sensor():
@@ -38,8 +39,8 @@ def add_sensor():
     
     Sensor.save_sensor(name, brand, model, topic, unit, is_active )
 
-    sensors = Sensor.get_sensors()
-    return render_template("sensors.html", sensors = sensors)
+
+    return render_template("sensors.html", sensors = sensores)
 
 @sensors_.route('/del_sensor', methods=['GET'])
 def del_sensor():
@@ -50,9 +51,10 @@ def del_sensor():
 
 @sensors_.route('/sensors')
 def sensors():
-    return render_template("sensors.html",devices=sensors_)
+    
+    return render_template("sensors.html",devices=sensores)
 
 @sensors_.route('/sensorsuser')
 def sensorsuser():
-    return render_template("sensorsuser.html",devices=sensors_)
+    return render_template("sensorsuser.html",devices=sensores)
 
