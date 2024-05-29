@@ -45,18 +45,41 @@ def create_app():
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
         if rc == 0:
-            print('Broker Connected successfully')
-            mqtt_client.subscribe(topic_subscribe) # subscribe topic
-        else:
-            print('Bad connection. Code:', rc)
+            mqtt_client.subscribe(MQTT_TOPIC_TEMPERATURE)
+            mqtt_client.subscribe(MQTT_TOPIC_HUMIDITY)
+
+        print("Conectado!")
 
     @mqtt_client.on_message()
-    def handle_mqtt_message(client, userdata, message):
-        if(message.topic==topic_subscribe):
-            try:
-                with app.app_context():
-                    Read.save_read(message.topic, message.payload.decode())
-                    Write.save_read(message.topic, message.payload.decode())
-            except:
-                pass
-    return app
+    def handle_message(client, userdata, message):
+        global temperatura, umidade, alerta
+        topic = message.topic
+        content = json.loads(message.payload.decode())
+        if topic == MQTT_TOPIC_TEMPERATURE:
+            for i in content:
+                if content[i] == str:
+                    content.pop(i)
+                temperatura = int(content['temperature'])
+                if temperatura > 35:
+                    alerta = "Alerta! Temperatura muito alta"
+                    float(temperatura)
+                    mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
+                else:
+                    alerta = ""
+                if topic == MQTT_TOPIC_HUMIDITY:
+                    for i in content:
+                        if content[i] == str:
+                            content.pop(i)
+                        umidade = int(content['humidity'])
+                        if umidade < 25:
+                            alerta = "Alerta! Umidade muito baixa"
+                            float(umidade)
+                            mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
+                        else:
+                            alerta = ""
+        else:
+            alerta = ""
+
+    @mqtt_client.on_disconnect()
+    def handle_disconnect():
+        print("Desconectado do Broker!")
