@@ -1,14 +1,15 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 from models.iot.actuators import Actuator
 
-actuator_ = Blueprint("actuator_",__name__, template_folder="views")
+actuators_ = Blueprint("actuator_",__name__, template_folder="views")
+atuadores_= Actuator.get_actuators()
 
-@actuator_.route('/register_actuator')
+@actuators_.route('/register_actuator')
 def register_actuator():
     return render_template("register_actuator.html")
 
 
-@actuator_.route('/add_actuator', methods=['POST'])
+@actuators_.route('/add_actuator', methods=['POST'])
 def add_actuator():
     name = request.form.get("name")
     brand = request.form.get("brand")
@@ -22,7 +23,7 @@ def add_actuator():
     actuators = Actuator.get_actuators()
     return render_template("actuators.html", actuators = actuators)
 
-@actuator_.route('/edit_actuator')
+@actuators_.route('/edit_actuator')
 def edit_actuator():
     id = request.args.get('id', None)
     actuator = Actuator.get_single_actuator(id)
@@ -30,7 +31,7 @@ def edit_actuator():
     return render_template("update_actuator.html", actuator = actuator)
 
 
-@actuator_.route('/update_actuator', methods=['POST'])
+@actuators_.route('/update_actuator', methods=['POST'])
 def update_actuator():
     id = request.form.get("id")
     name = request.form.get("name")
@@ -42,13 +43,16 @@ def update_actuator():
     actuators = Actuator.update_actuator(id, name, brand, model, topic, unit, is_active )
     return render_template("actuators.html", actuators = actuators)
 
-@actuator_.route('/del_actuator', methods=['GET'])
+@actuators_.route('/del_actuator', methods=['GET'])
 def del_actuator():
     id = request.args.get('id', None)
     actuators = Actuator.delete_actuator(id)
     return render_template("actuators.html", actuators = actuators)
 
-@actuator_.route('/actuators')
+@actuators_.route('/actuators')
 def actuators():
-    actuators = Actuator.get_actuators()
-    return render_template("actuators.html", actuators = actuators)
+    return render_template("actuators.html", devices=atuadores_)
+
+@actuators_.route('/actuatorsuser')
+def actuatorsuser():
+    return render_template("actuatorsuser.html", devices=atuadores_)

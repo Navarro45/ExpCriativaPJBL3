@@ -35,12 +35,13 @@ def create_app():
     app.register_blueprint(read, url_prefix='/')
     app.register_blueprint(write, url_prefix='/')
     db.init_app(app)
-    @app.route('/')
-    def index():
-        return render_template("home.html")
     @app.route('/home')
     def home():
         return render_template("home.html")
+
+    @app.route('/logout')
+    def logout():
+        return render_template("login.html")
     
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
