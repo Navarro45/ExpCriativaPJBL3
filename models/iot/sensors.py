@@ -10,9 +10,8 @@ class Sensor(db.Model):
     read = db.relationship("Read", cascade="all,delete", backref="sensors")
 
 
-    def save_sensor(name, brand, model, topic, unit, is_active):
-        device = Device(name = name, brand = brand,
-        model = model, is_active = is_active)
+    def save_sensor(name,topic, unit, is_active):
+        device = Device(name = name, is_active = is_active)
         sensor = Sensor(devices_id = device.id, unit= unit, topic = topic)
         device.sensors.append(sensor)
         db.session.add(device)
@@ -21,7 +20,6 @@ class Sensor(db.Model):
     def get_sensors():
         sensors = Sensor.query.join(Device, Device.id == Sensor.devices_id)\
             .add_columns(Device.id, Device.name,
-            Device.brand, Device.model,
             Device.is_active, Sensor.topic,
             Sensor.unit).all()
         return sensors
@@ -30,17 +28,14 @@ class Sensor(db.Model):
         sensor = Sensor.query.filter(Sensor.devices_id == id).first()
         if sensor is not None:
             sensor = Sensor.query.filter(Sensor.devices_id == id)\
-                .join(Device).add_columns(Device.id, Device.name, Device.brand,
-                Device.model, Device.is_active, Sensor.topic, Sensor.unit).first()
+                .join(Device).add_columns(Device.id, Device.name, Device.is_active, Sensor.topic, Sensor.unit).first()
             return [sensor]
         
-    def update_sensor(id,name, brand, model, topic, unit, is_active):
+    def update_sensor(id,name, topic, unit, is_active):
         device = Device.query.filter(Device.id == id).first()
         sensor = Sensor.query.filter(Sensor.devices_id == id).first()
         if device is not None:
             device.name = name
-            device.brand = brand
-            device.model = model
             sensor.topic = topic
             sensor.unit = unit
             device.is_active = is_active

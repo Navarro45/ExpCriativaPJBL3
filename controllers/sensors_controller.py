@@ -20,24 +20,20 @@ def edit_sensor():
 def update_sensor():
     id = request.form.get("id")
     name = request.form.get("name")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
     topic = request.form.get("topic")
     unit = request.form.get("unit")
     is_active = True if request.form.get("is_active") == "on" else False
-    sensors = Sensor.update_sensor(id, name, brand, model, topic, unit, is_active )
+    sensors = Sensor.update_sensor(id, name, topic, unit, is_active )
     return render_template("sensors.html", sensors = sensors)
 
 @sensors_.route('/add_sensor', methods=['POST'])
 def add_sensor():
     name = request.form.get("name")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
     topic = request.form.get("topic")
     unit = request.form.get("unit")
     is_active = True if request.form.get("is_active") == "on" else False
     
-    Sensor.save_sensor(name, brand, model, topic, unit, is_active )
+    Sensor.save_sensor(name, topic, unit, is_active )
 
 
     return render_template("sensors.html", sensors = sensores)

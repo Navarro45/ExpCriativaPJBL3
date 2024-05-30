@@ -6,9 +6,10 @@ from controllers.sensors_controller import sensors_
 from controllers.actuators_controller import actuators_
 from controllers.reads_controller import read
 from controllers.write_controller import write
+from controllers.users_controllers import users_
+from controllers.login_controllers import login_
 from models.iot.read import Read
 from models.iot.write import Write
-from controllers.users_controllers import users_
 
 def create_app():
     app = Flask(__name__,
@@ -30,7 +31,7 @@ def create_app():
     MQTT_TOPIC_SEND = "expcriativaenviar"
     MQTT_TOPIC_ALERT = "expcriativaalert"
     app.register_blueprint(login_, url_prefix='/')
-    app.register_blueprint(user_, url_prefix='/')
+    app.register_blueprint(users_, url_prefix='/')
     app.register_blueprint(sensors_, url_prefix='/')
     app.register_blueprint(actuators_, url_prefix='/')
     app.register_blueprint(read, url_prefix='/')
