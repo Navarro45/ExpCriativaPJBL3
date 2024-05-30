@@ -76,9 +76,7 @@ def admhome():
 def centrala():
     return render_template("centrala.html")
 
-@app.route('/userss')
-def userss():
-    return render_template("users.html", devices=users_)
+
 
 
 from controllers.app_controller import create_app
