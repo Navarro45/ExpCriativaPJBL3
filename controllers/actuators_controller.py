@@ -12,13 +12,11 @@ def register_actuator():
 @actuators_.route('/add_actuator', methods=['POST'])
 def add_actuator():
     name = request.form.get("name")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
     topic = request.form.get("topic")
     unit = request.form.get("unit")
     is_active = True if request.form.get("is_active") == "on" else False
     
-    Actuator.save_actuator(name, brand, model, topic, unit, is_active )
+    Actuator.save_actuator(name, topic, unit, is_active )
 
 
     return render_template("actuators.html", actuators = atuadores_)
@@ -35,12 +33,10 @@ def edit_actuator():
 def update_actuator():
     id = request.form.get("id")
     name = request.form.get("name")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
     topic = request.form.get("topic")
     unit = request.form.get("unit")
     is_active = True if request.form.get("is_active") == "on" else False
-    actuators = Actuator.update_actuator(id, name, brand, model, topic, unit, is_active )
+    actuators = Actuator.update_actuator(id, name, topic, unit, is_active )
     return render_template("actuators.html", actuators = actuators)
 
 @actuators_.route('/del_actuator', methods=['GET'])

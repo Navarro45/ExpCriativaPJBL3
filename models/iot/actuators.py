@@ -9,9 +9,8 @@ class Actuator(db.Model):
     topic = db.Column(db.String(50))
 
 
-    def save_actuator(name, brand, model, topic, unit, is_active):
-        device = Device(name = name, brand = brand,
-        model = model, is_active = is_active)
+    def save_actuator(name, topic, unit, is_active):
+        device = Device(name = name, is_active = is_active)
         actuator = Actuator(devices_id = device.id, unit= unit, topic = topic)
         device.actuators.append(actuator)
         db.session.add(device)
@@ -20,7 +19,6 @@ class Actuator(db.Model):
     def get_actuators():
         actuators = Actuator.query.join(Device, Device.id == Actuator.devices_id)\
             .add_columns(Device.id, Device.name,
-            Device.brand, Device.model,
             Device.is_active, Actuator.topic,
             Actuator.unit).all()
         return actuators
@@ -29,17 +27,14 @@ class Actuator(db.Model):
         actuator = Actuator.query.filter(Actuator.devices_id == id).first()
         if actuator is not None:
             actuator = Actuator.query.filter(Actuator.devices_id == id)\
-                .join(Device).add_columns(Device.id, Device.name, Device.brand,
-                Device.model, Device.is_active, Actuator.topic, Actuator.unit).first()
+                .join(Device).add_columns(Device.id, Device.name, Device.is_active, Actuator.topic, Actuator.unit).first()
             return [actuator]
         
-    def update_actuator(id,name, brand, model, topic, unit, is_active):
+    def update_actuator(id,name, topic, unit, is_active):
         device = Device.query.filter(Device.id == id).first()
         actuator = Actuator.query.filter(Actuator.devices_id == id).first()
         if device is not None:
             device.name = name
-            device.brand = brand
-            device.model = model
             actuator.topic = topic
             actuator.unit = unit
             device.is_active = is_active
