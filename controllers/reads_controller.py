@@ -21,3 +21,28 @@ def get_read():
         print(id)
         sensors = Sensor.get_sensors()
         return render_template("history_read.html", sensors = sensors, read = read)
+    
+@read.route('/central')
+def central():
+    global temperatura, umidade
+    return render_template("central.html", temperatura=temperatura, umidade=umidade)
+
+@read.route('/controle', methods=['GET','POST'])
+def controle():
+    if request.method == 'POST':
+        message_type = request.form['message_type']
+        if message_type == 'led':
+            message = request.form['led_state']
+            mqtt_client.publish(MQTT_TOPIC_ALERT, message)
+        return render_template("centrala.html")
+    else:
+        return render_template("centrala.html")
+
+
+
+
+
+
+@read.route('/centrala')
+def centrala():
+    return render_template("centrala.html")
