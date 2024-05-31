@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from models.db import db, instance
 import json
+import flask_login
 from flask_mqtt import Mqtt
 from controllers.sensors_controller import sensors_
 from controllers.actuators_controller import actuators_
@@ -10,6 +11,7 @@ from controllers.users_controller import users_
 from controllers.login_controller import login_
 from models.iot.read import Read
 from models.iot.write import Write
+from models.user.user import User
 
 def create_app():
     app = Flask(__name__,
@@ -26,6 +28,7 @@ def create_app():
     app.config['MQTT_TLS_ENABLED'] = False
     mqtt_client = Mqtt()
     mqtt_client.init_app(app)
+    login_manager = flask_login.LoginManager()
     MQTT_TOPIC_TEMPERATURE = "expcriativatemperatura"
     MQTT_TOPIC_HUMIDITY = "expcriativahumidade"
     MQTT_TOPIC_SEND = "expcriativaenviar"
@@ -37,6 +40,27 @@ def create_app():
     app.register_blueprint(read, url_prefix='/')
     app.register_blueprint(write, url_prefix='/')
     db.init_app(app)
+
+    @login_manager.user_loader
+    def user_loader(user):
+        users = users_
+        if user not in users:
+            return
+        user_ = User.get_users()
+        user_.id = user
+        return user_
+
+
+    @login_manager.request_loader
+    def request_loader(request):
+        user = request.form.get('user')
+        users = users_
+        if user not in users:
+            return
+        user_ = User.get_users()
+        user_.id = user
+        
+
     @app.route('/home')
     def home():
         return render_template("home.html")
