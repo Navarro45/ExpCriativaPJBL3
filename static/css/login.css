@@ -3,73 +3,74 @@
 body {
     font-family: 'Signika';
     font-weight: 400;
-    background-color: var(--background)
+    background-color: var(--background);
 }       
 
-h1, h2, h3, h4, h5,p {
+h1, h2, h3, h4, h5, p {
     font-family: 'Signika';
     font-weight: 700;
 }
 
-html {font-size: 100%;} /* 16px */
+html { font-size: 100%; } /* 16px */
 
-h1 {font-size: 4.210rem; /* 67.36px */}
+h1 { font-size: 4.210rem; /* 67.36px */ }
 
-h2 {font-size: 3.158rem; /* 50.56px */}
+h2 { font-size: 3.158rem; /* 50.56px */ }
 
-h3 {font-size: 2.369rem; /* 37.92px */}
+h3 { font-size: 2.369rem; /* 37.92px */ }
 
-h4 {font-size: 1.777rem; /* 28.48px */}
+h4 { font-size: 1.777rem; /* 28.48px */ }
 
-h5 {font-size: 1.333rem; /* 21.28px */}
+h5 { font-size: 1.333rem; /* 21.28px */ }
 
-p {font-size: 1.155rem;}
+p { font-size: 1.155rem; }
 
-small {font-size: 0.750rem; /* 12px */}
+small { font-size: 0.750rem; /* 12px */ }
 
-html, body,p{
-    margin:0;
-    height:100%;
-    overflow:auto;
+html, body, p {
+    margin: 0;
+    height: 100%;
+    overflow: auto;
     border: 0;
 }
 
-p{
+p {
     padding: 10px;
+    color: #cccccc; /* Menos claro */
 }
 
-input{
+input {
     border: 10px;
     border-radius: 8px;
     padding-top: 3px;
+    color: #000;
 }
 
-:root{
-    --text: rgb(237, 224, 226);
-    --background: rgb(13, 8, 9);
-    --primary: rgb(200, 161, 169);
-    --secondary: rgb(110, 82, 65);
-    --accent: rgb(174, 153, 118);
+:root {
+    --text: rgb(200, 200, 200); /* Menos claro */
+    --background: #4f4f4f; /* Mais escuro, quase preto */
+    --primary: rgb(150, 150, 150); /* Menos claro */
+    --secondary: rgb(90, 90, 90);
+    --accent: rgb(120, 120, 120);
 }
 
 .container {
     margin-top: 50px;
     padding-top: 50px;
-    
 }
 
-.forms{
+.forms {
     margin-top: 50px;
     padding-top: 50px;
 }
 
-.container .view{
+.container .view {
     margin-top: 50px;
     padding-top: 50px;
 }
 
 .view tr {
-    height: 20px; 
+    height: 20px;
 }
 
 .content {
@@ -89,12 +90,11 @@ input{
     margin-top: 16%;
 }
 
-
 .form-login {
     position: relative;
     width: 190px;
     height: 254px;
-    background-color: #000;
+    background-color: #1A1A1A; /* Mais escuro */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -103,10 +103,10 @@ input{
     gap: 12px;
     border-radius: 8px;
     cursor: pointer;
-    color: white;
-  }
-  
-  .form-login::before {
+    color: var(--text);
+}
+
+.form-login::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -115,46 +115,158 @@ input{
     width: 200px;
     height: 264px;
     border-radius: 10px;
-    background: linear-gradient(-45deg, #ab9e60 0%, #ab9e60 100%);
+    background: linear-gradient(-45deg, #333 0%, #333 100%); /* Cor mais neutra e escura */
     z-index: -10;
     pointer-events: none;
     transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  
-  .form-login::after {
+}
+
+.form-login::after {
     content: "";
     z-index: -1;
     position: absolute;
     inset: 0;
-    background: linear-gradient(-45deg, #ab9e60 0%, #ab9e60 100%);
+    background: linear-gradient(-45deg, #333 0%, #333 100%); /* Cor mais neutra e escura */
     transform: translate3d(0, 0, 0) scale(0.95);
     filter: blur(20px);
-  }
-  
-  .form-login:hover::after {
+}
+
+.form-login:hover::after {
     filter: blur(30px);
-  }
-  
-  .form-login:hover::before {
+}
+
+.form-login:hover::before {
     transform: rotate(-90deg) scaleX(1.34) scaleY(0.77);
-  }
-  
-  .form-login p {
+}
+
+.form-login p {
     font-size: 14px;
     text-align: center;
-  }
-  
-  .form-login input {
+    color: var(--text); /* Menos claro */
+}
+
+.form-login input {
     width: 100%;
     padding: 8px;
     border: none;
     border-radius: 4px;
     margin-bottom: 12px;
     color: black;
-  }
-  
-  .form-login input[type="submit"] {
-    background-color: #ab9e60;
+}
+
+.form-login input[type="submit"] {
+    background-color: #333; /* Cor mais neutra e escura */
     color: #000;
     font-weight: bold;
-  }
+}
+
+.card {
+    position: relative;
+    width: 200px;
+    height: 250px;
+    border-radius: 14px;
+    z-index: 1111;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 10px #f3f3f3, 0px 0px 10px #141414; /* Ajuste para tons de cinza */
+    margin: 15px;
+    background-color: #1A1A1A; /* Fundo mais escuro */
+}
+
+.bg {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 190px;
+    height: 240px;
+    z-index: 2;
+    background: rgba(100, 100, 100, .95); /* Ajuste para cinza mais escuro */
+    backdrop-filter: blur(24px);
+    border-radius: 10px;
+    overflow: hidden;
+    outline: 2px solid white;
+    text-align: center;
+}
+
+.blob {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #666; /* Cinza médio */
+    opacity: 1;
+    filter: blur(12px);
+    animation: blob-bounce 5s infinite ease;
+}
+
+@keyframes blob-bounce {
+    0% {
+        transform: translate(-100%, -100%) translate3d(0, 0, 0);
+    }
+
+    25% {
+        transform: translate(-100%, -100%) translate3d(100%, 0, 0);
+    }
+
+    50% {
+        transform: translate(-100%, -100%) translate3d(100%, 100%, 0);
+    }
+
+    75% {
+        transform: translate(-100%, -100%) translate3d(0, 100%, 0);
+    }
+
+    100% {
+        transform: translate(-100%, -100%) translate3d(0, 0, 0);
+    }
+}
+
+.boton {
+    padding: 0px 70px; /* Padronizado para ambos os botões */
+    border: 2px solid #2c2c2c;
+    background-color: #333; /* Cinza escuro */
+    color: #ffffff;
+    font-size: 0.8rem; /* Tamanho de fonte uniforme para ambos os botões */
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all 0.4s ease;
+    outline: none;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    font-weight: 100;
+}
+  
+.boton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
+    transform: scale(0);
+    transition: transform 0.5s ease;
+}
+  
+.boton:hover::after {
+    transform: scale(4);
+}
+  
+.boton:hover {
+    border-color: #232323;
+    background: #444;
+    color: #000; /* Texto preto no estado de hover */
+}

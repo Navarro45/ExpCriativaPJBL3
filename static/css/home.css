@@ -93,3 +93,7 @@ input{
     max-width: 100%;
     max-height: 100%;
 }
+
+.custom-navbar {
+    background-color: #1B1B1B !important;
+}
