@@ -6,8 +6,8 @@ from controllers.sensors_controller import sensors_
 from controllers.actuators_controller import actuators_
 from controllers.reads_controller import read
 from controllers.write_controller import write
-from controllers.users_controllers import users_
-from controllers.login_controllers import login_
+from controllers.users_controller import users_
+from controllers.login_controller import login_
 from models.iot.read import Read
 from models.iot.write import Write
 

@@ -7,10 +7,10 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # e.g., 'admin' or 'user'
-    is_active = db.Column(db.Boolean, default=True)
 
-    def save_user(username, email, password, role, is_active=True):
-        user = User(username=username, email=email, password=password, role=role, is_active=is_active)
+
+    def save_user(username, email, password, role):
+        user = User(username=username, email=email, password=password, role=role)
         db.session.add(user)
         db.session.commit()
 
@@ -22,7 +22,7 @@ class User(db.Model):
         user = User.query.filter(User.id == id).first()
         return user
 
-    def update_user(id, username=None, email=None, password=None, role=None, is_active=None):
+    def update_user(id, username=None, email=None, password=None, role=None):
         user = User.query.filter(User.id == id).first()
         if user:
             if username:
@@ -33,8 +33,7 @@ class User(db.Model):
                 user.password = password
             if role:
                 user.role = role
-            if is_active is not None:
-                user.is_active = is_active
+
             db.session.commit()
             return User.get_users()
         return None
