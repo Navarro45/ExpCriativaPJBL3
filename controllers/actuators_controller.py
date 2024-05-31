@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from models.iot.actuators import Actuator
 
 actuators_ = Blueprint("actuators_",__name__, template_folder="views")
-atuadores_= Actuator.get_actuators()
+
 
 @actuators_.route('/register_actuator')
 def register_actuator():
@@ -19,7 +19,7 @@ def add_actuator():
     Actuator.save_actuator(name, topic, unit, is_active )
 
 
-    return render_template("actuators.html", actuators = atuadores_)
+    return render_template("actuators.html", actuators = Actuator.get_actuators())
 
 @actuators_.route('/edit_actuator')
 def edit_actuator():
@@ -47,8 +47,8 @@ def del_actuator():
 
 @actuators_.route('/actuators')
 def actuators():
-    return render_template("actuators.html", devices=atuadores_)
+    return render_template("actuators.html", devices=Actuator.get_actuators())
 
 @actuators_.route('/actuatorsuser')
 def actuatorsuser():
-    return render_template("actuatorsuser.html", devices=atuadores_)
+    return render_template("actuatorsuser.html", devices=Actuator.get_actuators())
