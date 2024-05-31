@@ -19,3 +19,14 @@ def get_write():
         write = Write.get_write(id, start, end)
         actuators = Actuator.get_actuators()
         return render_template("history_write.html", actuators = actuators, write = write)
+
+@write.route('/send', methods=['GET','POST'])
+def send():
+    return render_template("publish.html")
+
+@write.route('/publish', methods=['GET', 'POST'])
+def remoto():
+  if request.method == 'POST':
+    mensagem = request.form['texto']
+    mqtt_client.publish(MQTT_TOPIC_SEND, mensagem)
+  return render_template("publish.html")

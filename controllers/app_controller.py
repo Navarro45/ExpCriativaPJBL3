@@ -41,6 +41,14 @@ def create_app():
     def home():
         return render_template("home.html")
 
+    @app.route('/sobre')
+    def sobre():
+        return render_template('sobre.html')
+
+    @app.route('/admhome')
+    def admhome():
+        return render_template("adm_home.html")
+
     @app.route('/logout')
     def logout():
         return render_template("login.html")
@@ -86,3 +94,5 @@ def create_app():
     @mqtt_client.on_disconnect()
     def handle_disconnect():
         print("Desconectado do Broker!")
+    
+    return app

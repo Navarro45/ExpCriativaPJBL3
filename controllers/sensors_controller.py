@@ -3,7 +3,7 @@ from models.iot.sensors import Sensor
 
 
 sensors_ = Blueprint("sensors_",__name__, template_folder="views")
-sensores = Sensor.get_sensors()
+
 
 @sensors_.route('/register_sensor')
 def register_sensor():
@@ -36,7 +36,7 @@ def add_sensor():
     Sensor.save_sensor(name, topic, unit, is_active )
 
 
-    return render_template("sensors.html", sensors = sensores)
+    return render_template("sensors.html", sensors = Sensor.get_sensors())
 
 @sensors_.route('/del_sensor', methods=['GET'])
 def del_sensor():
@@ -48,9 +48,9 @@ def del_sensor():
 @sensors_.route('/sensors')
 def sensors():
     
-    return render_template("sensors.html",devices=sensores)
+    return render_template("sensors.html",devices=Sensor.get_sensors())
 
 @sensors_.route('/sensorsuser')
 def sensorsuser():
-    return render_template("sensorsuser.html",devices=sensores)
+    return render_template("sensorsuser.html",devices=Sensor.get_sensors())
 
