@@ -94,3 +94,5 @@ def create_app():
     @mqtt_client.on_disconnect()
     def handle_disconnect():
         print("Desconectado do Broker!")
+    
+    return app
