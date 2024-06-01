@@ -1,14 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from models.db import db, instance
 import json
-import flask_login
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_mqtt import Mqtt
 from controllers.sensors_controller import sensors_
 from controllers.actuators_controller import actuators_
 from controllers.reads_controller import read
 from controllers.write_controller import write
 from controllers.users_controller import users_
-from controllers.login_controller import login_
 from models.iot.read import Read
 from models.iot.write import Write
 from models.user.user import User
@@ -28,12 +27,11 @@ def create_app():
     app.config['MQTT_TLS_ENABLED'] = False
     mqtt_client = Mqtt()
     mqtt_client.init_app(app)
-    login_manager = flask_login.LoginManager()
+    login_manager = LoginManager(app)
     MQTT_TOPIC_TEMPERATURE = "expcriativatemperatura"
     MQTT_TOPIC_HUMIDITY = "expcriativahumidade"
     MQTT_TOPIC_SEND = "expcriativaenviar"
     MQTT_TOPIC_ALERT = "expcriativaalert"
-    app.register_blueprint(login_, url_prefix='/')
     app.register_blueprint(users_, url_prefix='/')
     app.register_blueprint(sensors_, url_prefix='/')
     app.register_blueprint(actuators_, url_prefix='/')
@@ -42,40 +40,57 @@ def create_app():
     db.init_app(app)
 
     @login_manager.user_loader
-    def user_loader(user):
-        users = users_
-        if user not in users:
-            return
-        user_ = User.get_users()
-        user_.id = user
-        return user_
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
+    @app.route('/')
+    def index():
+        return render_template('login.html')
 
-    @login_manager.request_loader
-    def request_loader(request):
-        user = request.form.get('user')
-        users = users_
-        if user not in users:
-            return
-        user_ = User.get_users()
-        user_.id = user
-        
+    @app.route('/validated_user', methods=['POST','GET'])
+    def validated_user():
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            
+         
+            user = User.query.filter_by(username=username).first()
+            
+            if user and user.password == password:  
+                if user.role == "user":
+                    login_user(user)
+                    return render_template('home.html')
+                elif user.role == "admin" or user.role == "adm":
+                    login_user(user)
+                    return render_template('admhome.html')
+                else:
+                    return render_template('login.html')
+            else:
+                flash('Invalid credentials!')
+                return '<h1>Invalid credentials!</h1>'
+        else:
+            return render_template('login.html')
 
     @app.route('/home')
+    @login_required
     def home():
         return render_template("home.html")
 
     @app.route('/sobre')
+    @login_required
     def sobre():
         return render_template('sobre.html')
 
     @app.route('/admhome')
+    @login_required
     def admhome():
         return render_template("adm_home.html")
 
     @app.route('/logout')
+    @login_required
     def logout():
-        return render_template("login.html")
+        logout_user()
+        return render_template('login.html')
     
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
@@ -114,6 +129,38 @@ def create_app():
                             alerta = ""
         else:
             alerta = ""
+
+    @app.route('/central')
+    @login_required
+    def central():
+        global temperatura, umidade
+        return render_template("central.html", temperatura=temperatura, umidade=umidade)
+
+    @app.route('/controle', methods=['GET','POST'])
+    @login_required
+    def controle():
+        if request.method == 'POST':
+            message_type = request.form['message_type']
+            if message_type == 'led':
+                message = request.form['led_state']
+                mqtt_client.publish(MQTT_TOPIC_ALERT, message)
+            return render_template("centrala.html")
+        else:
+            return render_template("centrala.html")
+        
+    @app.route('/send', methods=['GET','POST'])
+    @login_required
+    def send():
+        return render_template("publish.html")
+
+    @app.route('/publish', methods=['GET', 'POST'])
+    @login_required
+    def remoto():
+        if request.method == 'POST':
+            mensagem = request.form['texto']
+        mqtt_client.publish(MQTT_TOPIC_SEND, mensagem)
+        return render_template("publish.html")
+
 
     @mqtt_client.on_disconnect()
     def handle_disconnect():

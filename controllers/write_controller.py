@@ -1,16 +1,19 @@
 from flask import Blueprint, request, render_template
 from models.iot.write import Write
 from models.iot.actuators import Actuator
+from flask_login import login_required
 
 write = Blueprint("write",__name__, template_folder="views")
 
 @write.route("/history_write")
+@login_required
 def history_write():
     actuators = Actuator.get_actuators()
     write = {}
     return render_template("history_write.html", actuators = actuators, write = write)
 
 @write.route("/get_write", methods=['POST'])
+@login_required
 def get_write():
     if request.method == 'POST':
         id = request.form['id']
@@ -20,13 +23,3 @@ def get_write():
         actuators = Actuator.get_actuators()
         return render_template("history_write.html", actuators = actuators, write = write)
 
-@write.route('/send', methods=['GET','POST'])
-def send():
-    return render_template("publish.html")
-
-@write.route('/publish', methods=['GET', 'POST'])
-def remoto():
-  if request.method == 'POST':
-    mensagem = request.form['texto']
-    mqtt_client.publish(MQTT_TOPIC_SEND, mensagem)
-  return render_template("publish.html")
