@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Register Actuator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/actuator.css') }}">
 </head>
 <body>
     {% extends "baseadm.html" %}
-    {% block content%}
+    {% block content %}
     <div class="vertical-center">
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-body">
-                        <form action= "http://localhost:8080/add_actuator" method= "POST">
-                            <p>Atuador:</p>
-                            <p><input type = "text" name = "actuator" placeholder="Atuador" required/></p>
-                            <p><input type = "submit" value = "Cadastrar" /></p>
-                        </form>
-                    </div>
+                    Registrar Atuador
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('actuators_.add_actuator') }}" method="POST">
+                        <p>Nome do Atuador:</p>
+                        <p><input type="text" name="name" placeholder="Nome do Atuador" required/></p>
+                        <p>Topico:</p>
+                        <p><input type="text" name="topic" placeholder="Topico" required/></p>
+                        <p>Unidade:</p>
+                        <p><input type="text" name="unit" placeholder="Unidade" required/></p>
+                        <p>Ativo:</p>
+                        <p><input type="checkbox" name="is_active"/></p>
+                        <p><input type="submit" value="Cadastrar"/></p>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock%}
-    </body>
+    {% endblock %}
+</body>
 </html>

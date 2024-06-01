@@ -1,0 +1,55 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.vertical-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 50%;
+}
+
+.card {
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.card-header {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card-body p {
+    margin: 10px 0;
+    color: #000; /* Garantindo cor preta para os rótulos */
+    font-size: 16px; /* Aumentando o tamanho da fonte para melhor visibilidade */
+}
+
+.card-body input[type="text"], .card-body input[type="checkbox"], .card-body input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
