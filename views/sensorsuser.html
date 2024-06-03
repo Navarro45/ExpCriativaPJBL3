@@ -13,15 +13,17 @@
                     <p>Sensores:</p>
                     <thead>
                         <tr>
-                            <th>Nome do Sensor</th>
-                            <th>Valor inicial</th>
+                            <th>Tópico</th>
+                            <th>Unidade</th>
+                            <th>Ativo</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for key, value in devices.items() %}
+                        {% for device in devices %}
                         <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value }}</td>
+                            <td>{{ device.topic }}</td>
+                            <td>{{ device.unit }}</td>
+                            <td>{{ 'Sim' if device.is_active else 'Não' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
