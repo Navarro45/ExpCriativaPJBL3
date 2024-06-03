@@ -12,6 +12,10 @@ from models.iot.read import Read
 from models.iot.write import Write
 from models.user.user import User
 
+temperatura = 0
+umidade = 0
+alerta = ''
+
 def create_app():
     app = Flask(__name__,
     template_folder="./views/",
@@ -32,6 +36,7 @@ def create_app():
     MQTT_TOPIC_HUMIDITY = "expcriativahumidade"
     MQTT_TOPIC_SEND = "expcriativaenviar"
     MQTT_TOPIC_ALERT = "expcriativaalert"
+    
     app.register_blueprint(users_, url_prefix='/')
     app.register_blueprint(sensors_, url_prefix='/')
     app.register_blueprint(actuators_, url_prefix='/')
@@ -127,6 +132,7 @@ def create_app():
                             alerta = ""
         else:
             alerta = ""
+            return temperatura, umidade, alerta
 
     @app.route('/central')
     @login_required

@@ -25,9 +25,6 @@ def get_read():
         sensors = Sensor.get_sensors()
         return render_template("history_read.html", sensors = sensors, read = read)
     
-
-
-
 @read.route('/centrala')
 def centrala():
     return render_template("centrala.html")
