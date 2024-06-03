@@ -114,6 +114,8 @@ input {
     padding: 20px;
     color: var(--text);
     width: 90%; /* Ajuste conforme necessário */
+    min-height: 500px; /* Altura mínima ajustável conforme necessário */
+    /* height: 500px; /* Use esta linha se quiser uma altura fixa */
 }
 
 .card-header {

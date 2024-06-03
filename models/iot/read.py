@@ -11,11 +11,19 @@ class Read(db.Model):
 
     def save_read(topic, value):
         sensor = Sensor.query.filter(Sensor.topic == topic).first()
+        if sensor is None:
+            print(f"No sensor found for topic {topic}")
+            return
+        
         device = Device.query.filter(Device.id == sensor.devices_id).first()
-        if (sensor is not None) and (device.is_active==True):
-            read = Read( read_datetime = datetime.now(), sensors_id = sensor.id, value = float(value) )
-            db.session.add(read)
-            db.session.commit()
+        if device is None or not device.is_active:
+            print(f"No active device found for sensor {sensor.id}")
+            return
+        
+        read = Read(read_datetime=datetime.now(), sensors_id=sensor.id, value=float(value))
+        print(read)
+        db.session.add(read)
+        db.session.commit()
 
     def get_read(device_id, start, end):
         sensor = Sensor.query.filter(Sensor.devices_id == device_id).first()

@@ -14,10 +14,14 @@
                 <div class="card-header">
                     <div class="card-body">
                         <form action= "http://localhost:8080/add_sensor" method= "POST">
-                            <p>Sensor:</p>
-                            <p><input type = "text" name = "sensor" placeholder="Sensor" required/></p>
-                            <p>valor inicial:</p>
-                            <p><input type = "text" name = "initial_value" placeholder="Valor inicial" required/></p>
+                            <p>nome</p>
+                            <p><input type = "text" name = "name" placeholder="nome" required/></p>
+                            <p>ativo</p>
+                            <p><input type = "checkbox" name = "is_active"required/></p>
+                            <p>Unit</p>
+                            <p><input type = "text" name = "unit" placeholder="unit" required/></p>
+                            <p>Topic</p>
+                            <p><input type = "text" name = "topic" placeholder="tópico" required/></p>
                             <p><input type = "submit" value = "Cadastrar" /></p>
                         </form>
                     </div>
@@ -26,5 +30,5 @@
         </div>
     </div>
     {% endblock%}
-    </body>
+</body>
 </html>

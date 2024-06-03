@@ -11,10 +11,9 @@ from controllers.users_controller import users_
 from models.iot.read import Read
 from models.iot.write import Write
 from models.user.user import User
+from models.iot.sensors import Sensor
 
-temperatura = 0
-umidade = 0
-alerta = ''
+
 
 def create_app():
     app = Flask(__name__,
@@ -105,34 +104,40 @@ def create_app():
 
     @mqtt_client.on_message()
     def handle_message(client, userdata, message):
-        global temperatura, umidade, alerta
-        topic = message.topic
-        content = json.loads(message.payload.decode())
-        if topic == MQTT_TOPIC_TEMPERATURE:
-            for i in content:
-                if content[i] == str:
-                    content.pop(i)
-                temperatura = int(content['temperature'])
+        with app.app_context():    
+            global temperatura, umidade, alerta
+            topic = Sensor.topic
+            content = json.loads(message.payload.decode())
+            
+            if topic == MQTT_TOPIC_TEMPERATURE:
+                # Remove keys with string values
+                content = {k: v for k, v in content.items() if not isinstance(v, str)}
+                temperatura = int(content.get('temperature', 0))
+
+                
+                Read.save_read(topic, temperatura)
+
                 if temperatura > 35:
                     alerta = "Alerta! Temperatura muito alta"
-                    float(temperatura)
                     mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
                 else:
                     alerta = ""
-                if topic == MQTT_TOPIC_HUMIDITY:
-                    for i in content:
-                        if content[i] == str:
-                            content.pop(i)
-                        umidade = int(content['humidity'])
-                        if umidade < 25:
-                            alerta = "Alerta! Umidade muito baixa"
-                            float(umidade)
-                            mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
-                        else:
-                            alerta = ""
-        else:
-            alerta = ""
-            return temperatura, umidade, alerta
+            elif topic == MQTT_TOPIC_HUMIDITY:
+                # Remove keys with string values
+                content = {k: v for k, v in content.items() if not isinstance(v, str)}
+                umidade = int(content.get('humidity', 0))
+
+                
+                Read.save_read(topic, umidade)
+
+                if umidade < 25:
+                    alerta = "Alerta! Umidade muito baixa"
+                    mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
+                else:
+                    alerta = ""
+            else:
+                alerta = ""
+
 
     @app.route('/central')
     @login_required
