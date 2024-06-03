@@ -52,8 +52,6 @@ def create_app():
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            
-         
             user = User.query.filter_by(username=username).first()
             
             if user and user.password == password:  
@@ -62,7 +60,7 @@ def create_app():
                     return render_template('home.html')
                 elif user.role == "admin" or user.role == "adm":
                     login_user(user)
-                    return render_template('admhome.html')
+                    return render_template('adm_home.html')
                 else:
                     return render_template('login.html')
             else:

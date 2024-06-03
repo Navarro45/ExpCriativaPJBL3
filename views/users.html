@@ -16,17 +16,23 @@
                     <p>Usuários:</p>
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Nome</th>
-                            <th>Senha</th>
+                            <th>Email</th>
+                            <th>Função</th>
+                            <th>Ativo</th>
                             <th>Deletar</th>
                             <th>Editar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for key, value in devices.items() %}
+                        {% for device in devices %}
                         <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value }}</td>
+                            <td>{{device.id}}</td>
+                            <td>{{device.username}}</td>
+                            <td>{{device.email}}</td>
+                            <td>{{device.role}}</td>
+                            <td>{{device.is_active}}</td>
                             <td><a href="http://localhost:8080/del_user?user={{ key }}">Deletar</a></td>
                             <td><a href="http://localhost:8080/edit_user?user={{ key }}">Editar</a></td>
                         </tr>

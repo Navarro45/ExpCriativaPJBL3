@@ -7,4 +7,4 @@ users_ = Blueprint("users_",__name__, template_folder="views")
 @users_.route('/userss')
 @login_required
 def userss():
-    return render_template("users.html", devices=users_)
+    return render_template("users.html", devices=User.get_users())
