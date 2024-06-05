@@ -7,7 +7,7 @@
 </head>
 <body>
     {% extends "baseadm.html" %}
-    {% block content%}
+    {% block content %}
     <div class="vertical-center">
         <div class="container view">
             <div class="justify-content-center">
@@ -26,31 +26,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for device in devices %}
+                        {% for user in devices %}
                         <tr>
-                            <td>{{device.id}}</td>
-                            <td>{{device.username}}</td>
-                            <td>{{device.email}}</td>
-                            <td>{{device.role}}</td>
-                            <td>{{device.is_active}}</td>
-                            <td><a href="http://localhost:8080/del_user?user={{ key }}">Deletar</a></td>
-                            <td><a href="http://localhost:8080/edit_user?user={{ key }}">Editar</a></td>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>{{ user.is_active }}</td>
+                            <td><a href="http://localhost:8080/del_user?id={{ user.id }}">Deletar</a></td>
+                            <td><a href="http://localhost:8080/edit_user?id={{ user.id }}">Editar</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                <form action= "http://localhost:8080/register_user">
-                    <p><input type= "submit" value= "Adicionar Usuário"/></p>
+                <form action="http://localhost:8080/register_user">
+                    <p><input type="submit" value="Adicionar Usuário"/></p>
                 </form>
                 {% else %}
                 <p>Ainda não há usuários registrados!<p>
-                <form action= "http://localhost:8080/register_user">
-                    <p><input type= "submit" value= "Adicionar Usuário"/></p>
+                <form action="http://localhost:8080/register_user">
+                    <p><input type="submit" value="Adicionar Usuário"/></p>
                 </form>
                 {% endif %}
             </div>
         </div>
     </div>
-    {% endblock%}
+    {% endblock %}
 </body>
 </html>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Minha Casa</title>
@@ -28,8 +29,8 @@
                                 <td>{{ device.device_id }}</td>
                                 <td>{{ device.unit }}</td>
                                 <td>{{ device.topic }}</td>
-                                <td><a href="http://localhost:8080/del_user?user={{ device.id }}">Deletar</a></td>
-                                <td><a href="http://localhost:8080/edit_user?user={{ device.id }}">Editar</a></td>
+                                <td><a href="http://localhost:8080/del_sensor?id={{ device.id }}">Deletar</a></td>
+                                <td><a href="http://localhost:8080/edit_sensor?id={{ device.id }}">Editar</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>

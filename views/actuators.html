@@ -18,16 +18,18 @@
                     <th>Unidade</th>
                     <th>Ativo</th>
                     <th>Deletar</th>
+                    <th>Editar</th>
                 </tr>
             </thead>
             <tbody>
                 {% for device in devices %}
                 <tr>
-                    <td>{{ device[1] }}</td>
-                    <td>{{ device[4] }}</td>
-                    <td>{{ device[5] }}</td>
-                    <td>{{ device[2] }}</td>
-                    <td><a href="{{ url_for('actuators_.del_actuator', id=device[0]) }}">Deletar</a></td>
+                    <td>{{ device.name }}</td>
+                    <td>{{ device.topic }}</td>
+                    <td>{{ device.unit }}</td>
+                    <td>{{ 'Sim' if device.is_active else 'Não' }}</td>
+                    <td><a href="{{ url_for('actuators_.del_actuator', id=device.id) }}">Deletar</a></td>
+                    <td><a href="{{ url_for('actuators_.edit_actuator', id=device.id) }}">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -37,3 +39,4 @@
     {% endblock %}
 </body>
 </html>
+    

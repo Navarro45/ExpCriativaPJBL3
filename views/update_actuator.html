@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Actuator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Update Actuator</h2>
+        <form action="{{ url_for('actuators_.update_actuator') }}" method="POST">
+            <input type="hidden" name="id" value="{{ actuator.id }}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ actuator.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="topic">Topic</label>
+                <input type="text" class="form-control" id="topic" name="topic" value="{{ actuator.topic }}" required>
+            </div>
+            <div class="form-group">
+                <label for="unit">Unit</label>
+                <input type="text" class="form-control" id="unit" name="unit" value="{{ actuator.unit }}" required>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if actuator.is_active %}checked{% endif %}>
+                <label class="form-check-label" for="is_active">Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Actuator</button>
+        </form>
+    </div>
+</body>
+</html>

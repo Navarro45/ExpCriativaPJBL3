@@ -20,7 +20,7 @@ def add_actuator():
     Actuator.save_actuator(name, topic, unit, is_active)
     return redirect(url_for('actuators_.actuators'))
 
-@actuators_.route('/edit_actuator')
+@actuators_.route('/edit_actuator', methods=['GET'])
 @login_required
 def edit_actuator():
     id = request.args.get('id', None)
