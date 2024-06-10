@@ -14,7 +14,6 @@ from models.user.user import User
 from models.iot.sensors import Sensor
 
 
-
 def create_app():
     app = Flask(__name__,
     template_folder="./views/",
@@ -149,8 +148,7 @@ def create_app():
     @app.route('/central')
     @login_required
     def central():
-        global temperatura, umidade
-        return render_template("central.html", temperatura=temperatura, umidade=umidade)
+        return render_template("central.html")
 
     @app.route('/controle', methods=['GET','POST'])
     @login_required
