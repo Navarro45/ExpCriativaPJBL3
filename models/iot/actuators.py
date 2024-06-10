@@ -33,16 +33,25 @@ class Actuator(db.Model):
 
     @staticmethod
     def update_actuator(id, name, topic, unit, is_active):
-        device = Device.query.filter(Device.id == id).first()
-        actuator = Actuator.query.filter(Actuator.devices_id == id).first()
-        if device:
-            device.name = name
-            device.is_active = is_active
-            db.session.commit()
-        if actuator:
-            actuator.topic = topic
-            actuator.unit = unit
-            db.session.commit()
+        try:
+            device = Device.query.filter(Device.id == id).first()
+            actuator = Actuator.query.filter(Actuator.devices_id == id).first()
+
+            if device:
+                print(f"Updating device: {device.id}")
+                device.name = name
+                device.is_active = is_active
+                db.session.commit()
+
+            if actuator:
+                print(f"Updating actuator: {actuator.id}")
+                actuator.topic = topic
+                actuator.unit = unit
+                db.session.commit()
+
+        except Exception as e:
+            print(f"Error updating actuator: {e}")
+
         return Actuator.get_actuators()
 
     @staticmethod
