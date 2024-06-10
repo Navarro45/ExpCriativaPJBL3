@@ -3,13 +3,14 @@ from models.iot.actuators import Actuator
 from datetime import datetime
 from models.iot.devices import Device
 
+#Classe para leitura dos alertas e mensagens enviadas para o sistema
 
 class Write(db.Model):
     __tablename__ = 'write'
     id= db.Column('id', db.Integer, nullable = False, primary_key=True)
     read_datetime = db.Column(db.DateTime(), nullable = False)
     actuator_id= db.Column(db.Integer, db.ForeignKey(Actuator.id), nullable = False)
-    value = db.Column( db.Float, nullable = True)
+    mensagem = db.Column( db.VARCHAR, nullable = True)
 
     def save_write(topic, value):
         actuator = Actuator.query.filter(Actuator.topic == topic).first()

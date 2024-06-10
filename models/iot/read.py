@@ -2,6 +2,9 @@ from models.db import db
 from models.iot.sensors import Sensor
 from datetime import datetime
 from models.iot.devices import Device
+
+#Classe para leitura dos sensores
+
 class Read(db.Model):
     __tablename__ = 'read'
     id= db.Column('id', db.Integer, nullable = False, primary_key=True)

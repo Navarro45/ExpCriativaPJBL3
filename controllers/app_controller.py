@@ -138,6 +138,10 @@ def create_app():
                         mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
                     else:
                         alerta = ""
+                elif MQTT_TOPIC_SEND in topic:
+                    payload = json.loads(message.payload.decode())
+                    mensagem = payload.get('value')
+                    Write.save_write(topic, mensagem)
                 else:
                     alerta = ""
 
@@ -155,6 +159,7 @@ def create_app():
             message_type = request.form['message_type']
             if message_type == 'led':
                 message = request.form['led_state']
+                Write.save_write(MQTT_TOPIC_ALERT, message)
                 mqtt_client.publish(MQTT_TOPIC_ALERT, message)
             return render_template("centrala.html")
         else:
@@ -170,6 +175,7 @@ def create_app():
     def remoto():
         if request.method == 'POST':
             mensagem = request.form['texto']
+        Write.save_write(MQTT_TOPIC_SEND,mensagem)
         mqtt_client.publish(MQTT_TOPIC_SEND, mensagem)
         return render_template("publish.html")
 
