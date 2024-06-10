@@ -14,6 +14,7 @@ def add_user():
     is_active = True if request.form.get("is_active") == "on" else False
     
     User.save_user(username, email, password, role, is_active )
+    return render_template("users.html", devices=User.get_users())
 
 @users_.route('/register_user')
 @login_required
