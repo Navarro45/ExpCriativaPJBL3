@@ -4,6 +4,23 @@ from flask_login import login_required
 
 users_ = Blueprint("users_", __name__, template_folder="views")
 
+@users_.route('/add_user', methods=['POST'])
+@login_required
+def add_user():
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    role = request.form.get("role")
+    is_active = True if request.form.get("is_active") == "on" else False
+    
+    User.save_user(username, email, password, role, is_active )
+    return render_template("users.html", devices=User.get_users())
+
+@users_.route('/register_user')
+@login_required
+def register_user():
+    return render_template("register_user.html")
+
 @users_.route('/userss')
 @login_required
 def userss():

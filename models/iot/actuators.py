@@ -46,7 +46,7 @@ class Actuator(db.Model):
 
             if actuator:
                 print(f"Updating actuator: {actuator.id}")
-                actuator.name = name  # Atualizando o nome no atuador
+                actuator.name = name 
                 actuator.topic = topic
                 actuator.unit = unit
                 db.session.commit()

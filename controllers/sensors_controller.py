@@ -27,7 +27,7 @@ def update_sensor():
     unit = request.form.get("unit")
     is_active = True if request.form.get("is_active") == "on" else False
     sensors = Sensor.update_sensor(id, name, topic, unit, is_active )
-    return render_template("sensors.html", sensors = sensors)
+    return render_template("sensors.html", devices = sensors)
 
 @sensors_.route('/add_sensor', methods=['POST'])
 @login_required
@@ -40,14 +40,14 @@ def add_sensor():
     Sensor.save_sensor(name, topic, unit, is_active )
 
 
-    return render_template("sensors.html", sensors = Sensor.get_sensors())
+    return render_template("sensors.html", devices = Sensor.get_sensors())
 
 @sensors_.route('/del_sensor', methods=['GET'])
 @login_required
 def del_sensor():
     id = request.args.get('id', None)
     sensors = Sensor.delete_sensor(id)
-    return render_template("sensors.html", sensors = sensors)
+    return render_template("sensors.html", devices = sensors)
 
 
 @sensors_.route('/sensors')
