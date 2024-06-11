@@ -64,9 +64,9 @@ input {
 :root {
     --text: rgb(237, 224, 226);
     --background: #4f4f4f;
-    --primary: rgb(200, 161, 169);
-    --secondary: rgb(110, 82, 65);
-    --accent: rgb(174, 153, 118);
+    --primary: rgb(43, 44, 49);
+    --secondary: rgb(0, 0, 0);
+    --accent: rgb(0, 0, 0);
 }
 
 .container {
@@ -184,4 +184,3 @@ input {
     border-radius: 4px;
     overflow: hidden;
 }
-
