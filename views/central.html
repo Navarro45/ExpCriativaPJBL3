@@ -1,25 +1,19 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>Sensor Information</title>
     <link rel="stylesheet" href="static/css/home.css">
 </head>
 <body>
-    {% extends "base.html" %}
+    {%extends "base.html"%}
     {% block content %}
     <div class="container">
-        <form method="GET" action="/controle">
-            <label for="device_id">Device ID:</label>
-            <input type="number" id="device_id" name="device_id" required>
-            <button type="submit">Get Readings</button>
-        </form>
         <div class="sensor-info">
             <h2>Temperature</h2>
-            <p>{{ temperatura }}</p>
+            <p>{{temperatura}}</p>
         </div>
         <div class="sensor-info">
             <h2>Humidity</h2>
-            <p>{{ umidade }}</p>
+            <p>{{umidade}}</p>
         </div>
     </div>
     {% endblock %}

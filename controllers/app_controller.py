@@ -56,6 +56,8 @@ def create_app():
 
         print(f"Loaded sensor topics: {TOPICOS_SENSOR.keys()}")
         print(f"Loaded actuator topics: {TOPICOS_ALERT.keys()}")
+        return TOPICOS_SENSOR, TOPICOS_ALERT
+
 
 
     @login_manager.user_loader
@@ -84,7 +86,7 @@ def create_app():
                     return render_template('login.html')
             else:
                 flash('Invalid credentials!')
-                return '<h1>Invalid credentials!</h1>'
+                return render_template('login.html')
         else:
             return render_template('login.html')
 
@@ -111,14 +113,19 @@ def create_app():
     
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
+        global TOPICOS_ALERT,TOPICOS_SENSOR
         with app.app_context():
             if rc == 0:
                 print("Connection successful")
                 load_topics()
+                
+                print(TOPICOS_SENSOR.keys())
                 for topic in TOPICOS_SENSOR.keys():
+                    print(topic)
                     mqtt_client.subscribe(topic)
                     print(f"Subscribed to topic: {topic}")
                 for topic in TOPICOS_ALERT.keys():
+                    print(topic)
                     mqtt_client.subscribe(topic)
                     print(f"Subscribed to topic: {topic}")
             else:
@@ -127,6 +134,8 @@ def create_app():
 
     @mqtt_client.on_message()
     def handle_message(client, userdata, message):
+        global TOPICOS_ALERT,TOPICOS_SENSOR
+        print(message)
         with app.app_context():
             load_topics()
             topic = message.topic
@@ -194,15 +203,18 @@ def create_app():
             start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
             end = datetime.now().replace(hour=23, minute=59, second=59, microsecond=999999)
 
+            readings = Read.get_read(sensor_id=sensor_id, start_datetime=start, end_datetime=end)
+
             temperatura = None
             umidade = None
 
-            readings = Read.get_read(sensor_id, start, end)
             for reading in readings:
-                if reading.unit == 'temperature':
-                    temperatura = reading.value
-                elif reading.unit == 'humidity':
-                    umidade = reading.value
+                sensor = Sensor.query.get(sensor_id)
+                if sensor and sensor.topic:
+                    if 'Temperatura' in sensor.unit:
+                        temperatura = reading.value
+                    elif 'Umidade' in sensor.unit:
+                        umidade = reading.value
 
             return render_template("central.html", temperatura=temperatura, umidade=umidade)
         

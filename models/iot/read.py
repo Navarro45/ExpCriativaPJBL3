@@ -6,7 +6,7 @@ from models.iot.devices import Device
 # Classe para leitura dos sensores
 
 class Read(db.Model):
-    __tablename__ = 'read'
+    tablename = 'read'
     id = db.Column('id', db.Integer, nullable=False, primary_key=True)
     read_datetime = db.Column(db.DateTime(), nullable=False)
     device_id = db.Column(db.Integer, db.ForeignKey(Device.id), nullable=False)
@@ -15,16 +15,32 @@ class Read(db.Model):
     @staticmethod
     def save_read(topic, value):
         sensor = Sensor.query.filter(Sensor.topic == topic).first()
+        
         if sensor is None:
             print(f"No sensor found for topic {topic}")
             return
 
-        if not sensor.is_active:
-            print(f"Sensor {sensor.id} is not active")
+        device = Device.query.get(sensor.devices_id)
+        if device is None or not device.is_active:
+            print(f"Device {device.id if device else 'unknown'} is not active or does not exist")
             return
 
-        read = Read(read_datetime=datetime.now(), device_id=sensor.devices_id, value=float(value))
+        read = Read(read_datetime=datetime.now(), device_id=device.id, value=float(value))
         print(f"Saving read: {read}")
         db.session.add(read)
         db.session.commit()
-        print(f"Read saved successfully")
+        print(f"Read saved successfully")
+    
+    @staticmethod
+    def get_read(sensor_id=None, start_datetime=None, end_datetime=None):
+        query = Read.query.join(Device, Read.device_id == Device.id).join(Sensor, Device.id == Sensor.devices_id)
+
+        if sensor_id is not None:
+            query = query.filter(Sensor.id == sensor_id)
+        
+        if start_datetime is not None:
+            query = query.filter(Read.read_datetime >= start_datetime)
+        
+        if end_datetime is not None:
+            query = query.filter(Read.read_datetime <= end_datetime)
+        return query.all()

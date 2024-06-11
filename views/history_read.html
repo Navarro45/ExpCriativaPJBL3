@@ -1,50 +1,27 @@
-{% extends"base.html" %}
-{% block content%} 
-<link rel="stylesheet" href="../static/css/read.css"/>
-<div class="vertical-center">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensor Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
     <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-body">
-                    <form action="http://localhost:8080/get_read" method="post">
-                        <select name="id" class="Input">
-                            {% for sensor in sensors %}
-                                <option type = "text" name = "id" value= "{{sensor.id}}">{{ sensor.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <p></p>
-                        <p></p>
-                        <p></p>
-                        Início:
-                        <p><input type="datetime-local"  name="start" requires/></p>
-                        Fim:
-                        <p><input type="datetime-local"  name="end" requires/></p>
-                        <p><a href="/history_read" class="boton"></a><p>
-                    </form>
-                    {% if read|length> 0 %}
-                        <table id="view_read" class="table table-striped table-bordered" style="width:100%">
-                            <p>Sensores:</p>
-                            <thead>
-                                <tr>
-                                    <th>Sensor</th>
-                                    <th>Valor</th>
-                                    <th>Horário</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for read in read %}
-                                    <tr>
-                                        <td>{{ read.sensors_id }}</td>
-                                        <td>{{ read.value }}</td>
-                                        <td>{{ read.read_datetime }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %} 
-                </div>
-            </div>
+        <form method="GET" action="/controle">
+            <label for="sensor_id">Sensor ID:</label>
+            <input type="number" id="sensor_id" name="sensor_id" required>
+            <button type="submit">Get Readings</button>
+        </form>
+        <div class="sensor-info">
+            <h2>Temperature</h2>
+            <p>{{ temperatura }}</p>
+        </div>
+        <div class="sensor-info">
+            <h2>Humidity</h2>
+            <p>{{ umidade }}</p>
         </div>
     </div>
-</div>   
-{% endblock%}
+    {% endblock %}
+</body>
+</html>
