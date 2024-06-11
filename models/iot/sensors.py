@@ -7,7 +7,7 @@ class Sensor(db.Model):
     devices_id = db.Column( db.Integer, db.ForeignKey(Device.id))
     unit = db.Column(db.String(50))
     topic = db.Column(db.String(50))
-    read = db.relationship("Read", cascade="all,delete", backref="sensors")
+
 
 
     def save_sensor(name,topic, unit, is_active):

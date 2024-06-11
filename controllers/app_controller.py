@@ -12,6 +12,8 @@ from models.iot.read import Read
 from models.iot.write import Write
 from models.user.user import User
 from models.iot.sensors import Sensor
+from models.iot.actuators import Actuator
+from datetime import datetime
 
 
 def create_app():
@@ -30,10 +32,7 @@ def create_app():
     mqtt_client = Mqtt()
     mqtt_client.init_app(app)
     login_manager = LoginManager(app)
-    MQTT_TOPIC_TEMPERATURE = "expcriativatemperatura"
-    MQTT_TOPIC_HUMIDITY = "expcriativahumidade"
-    MQTT_TOPIC_SEND = "expcriativaenviar"
-    MQTT_TOPIC_ALERT = "expcriativaalert"
+
     
     app.register_blueprint(users_, url_prefix='/')
     app.register_blueprint(sensors_, url_prefix='/')
@@ -41,6 +40,19 @@ def create_app():
     app.register_blueprint(read, url_prefix='/')
     app.register_blueprint(write, url_prefix='/')
     db.init_app(app)
+
+    # Variáveis globais para tópicos
+    TOPICOS_SENSOR = {}
+    TOPICOS_ALERT = {}
+
+    def load_topics():
+        global TOPICOS_SENSOR, TOPICOS_ALERT
+        sensors = Sensor.get_sensors()
+        actuators = Actuator.query.all()
+
+        TOPICOS_SENSOR = {sensor.topic: sensor for sensor in sensors}
+        TOPICOS_ALERT = {actuator.topic: actuator for actuator in actuators}
+
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -96,53 +108,41 @@ def create_app():
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
         if rc == 0:
-            mqtt_client.subscribe(MQTT_TOPIC_TEMPERATURE)
-            mqtt_client.subscribe(MQTT_TOPIC_HUMIDITY)
-
+            for topic in TOPICOS_SENSOR.keys():
+                mqtt_client.subscribe(topic)
+            for topic in TOPICOS_ALERT.keys():
+                mqtt_client.subscribe(topic)
         print("Conectado!")
+
 
     @mqtt_client.on_message()
     def handle_message(client, userdata, message):
-        with app.app_context():    
-            topic = []
-            sensors = Sensor.get_sensors()
-            for sensor in sensors:
-                topic.append(sensor.topic)  
-
-                content = json.loads(message.payload.decode())
-                
-                if MQTT_TOPIC_TEMPERATURE in topic:
-                    # Remove keys with string values
-                    content = {k: v for k, v in content.items() if not isinstance(v, str)}
-                    temperatura = int(content.get('temperature', 0))
-
-                    
-                    Read.save_read(MQTT_TOPIC_TEMPERATURE, temperatura)
+        with app.app_context():
+            topic = message.topic
+            content = json.loads(message.payload.decode())
+            
+            if topic in TOPICOS_SENSOR:
+                sensor = TOPICOS_SENSOR[topic]
+                if 'temperature' in content:
+                    temperatura = int(content['temperature'])
+                    Read.save_read(topic, temperatura)
 
                     if temperatura > 35:
                         alerta = "Alerta! Temperatura muito alta"
-                        mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
-                    else:
-                        alerta = ""
-                elif MQTT_TOPIC_HUMIDITY in topic:
-                    # Remove keys with string values
-                    content = {k: v for k, v in content.items() if not isinstance(v, str)}
-                    umidade = int(content.get('humidity', 0))
+                        mqtt_client.publish(TOPICOS_ALERT.get('alert_topic', ''), alerta)
 
-                    
-                    Read.save_read(MQTT_TOPIC_HUMIDITY, umidade)
+                if 'humidity' in content:
+                    umidade = int(content['humidity'])
+                    Read.save_read(topic, umidade)
 
                     if umidade < 25:
                         alerta = "Alerta! Umidade muito baixa"
-                        mqtt_client.publish(MQTT_TOPIC_ALERT, alerta)
-                    else:
-                        alerta = ""
-                elif MQTT_TOPIC_SEND in topic:
-                    payload = json.loads(message.payload.decode())
-                    mensagem = payload.get('value')
-                    Write.save_write(topic, mensagem)
-                else:
-                    alerta = ""
+                        mqtt_client.publish(TOPICOS_ALERT.get('alert_topic', ''), alerta)
+            elif topic in TOPICOS_ALERT:
+                actuator = TOPICOS_ALERT[topic]
+                mensagem = content.get('value')
+                Write.save_write(topic, mensagem)
+
 
 
     @app.route('/central')
@@ -150,32 +150,47 @@ def create_app():
     def central():
         return render_template("central.html")
 
-    @app.route('/controle', methods=['GET','POST'])
+    @app.route('/controle', methods=['GET', 'POST'])
     @login_required
     def controle():
         if request.method == 'POST':
             message_type = request.form['message_type']
             if message_type == 'led':
                 message = request.form['led_state']
-                Write.save_write(MQTT_TOPIC_ALERT, message)
-                mqtt_client.publish(MQTT_TOPIC_ALERT, message)
-            return render_template("centrala.html")
+                Write.save_write(TOPICOS_ALERT, message)
+                mqtt_client.publish(TOPICOS_ALERT, message)
+            return render_template("central.html")
         else:
-            return render_template("centrala.html")
+            sensor_id = request.args.get('sensor_id', default=1, type=int)
+            start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            end = datetime.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+
+            temperatura = None
+            umidade = None
+
+            readings = Read.get_read(sensor_id, start, end)
+            for reading in readings:
+                if reading.unit == 'temperature':
+                    temperatura = reading.value
+                elif reading.unit == 'humidity':
+                    umidade = reading.value
+
+            return render_template("central.html", temperatura=temperatura, umidade=umidade)
         
     @app.route('/send', methods=['GET','POST'])
     @login_required
     def send():
         return render_template("publish.html")
 
-    @app.route('/publish', methods=['GET', 'POST'])
+    @app.route('/publish', methods=['POST'])
     @login_required
-    def remoto():
-        if request.method == 'POST':
-            mensagem = request.form['texto']
-        Write.save_write(MQTT_TOPIC_SEND,mensagem)
-        mqtt_client.publish(MQTT_TOPIC_SEND, mensagem)
+    def publish():
+        mensagem = request.form['texto']
+        topic = "expcriativaenviar"
+        Write.save_write(topic, mensagem)
+        mqtt_client.publish(topic, mensagem)
         return render_template("publish.html")
+
 
 
     @mqtt_client.on_disconnect()

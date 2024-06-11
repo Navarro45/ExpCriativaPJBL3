@@ -26,7 +26,7 @@
                             {% for device in devices %}
                             <tr>
                                 <td>{{ device.id }}</td>
-                                <td>{{ device.device_id }}</td>
+                                <td>{{ device.devices_id }}</td>
                                 <td>{{ device.unit }}</td>
                                 <td>{{ device.topic }}</td>
                                 <td><a href="http://localhost:8080/del_sensor?id={{ device.id }}">Deletar</a></td>
