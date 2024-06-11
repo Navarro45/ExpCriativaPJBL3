@@ -9,7 +9,7 @@ class Read(db.Model):
     __tablename__ = 'read'
     id = db.Column('id', db.Integer, nullable=False, primary_key=True)
     read_datetime = db.Column(db.DateTime(), nullable=False)
-    device_id = db.Column(db.Integer, db.ForeignKey(Device.id), nullable=False)  # Alterado de sensors_id para device_id
+    device_id = db.Column(db.Integer, db.ForeignKey(Device.id), nullable=False)
     value = db.Column(db.Float, nullable=True)
 
     @staticmethod
@@ -19,19 +19,12 @@ class Read(db.Model):
             print(f"No sensor found for topic {topic}")
             return
 
-        device = Device.query.filter(Device.id == sensor.devices_id).first()
-        if device is None or not device.is_active:
-            print(f"No active device found for sensor {sensor.id}")
+        if not sensor.is_active:
+            print(f"Sensor {sensor.id} is not active")
             return
 
-        read = Read(read_datetime=datetime.now(), device_id=device.id, value=float(value))
-        print(read)
+        read = Read(read_datetime=datetime.now(), device_id=sensor.devices_id, value=float(value))
+        print(f"Saving read: {read}")
         db.session.add(read)
         db.session.commit()
-
-    @staticmethod
-    def get_read(device_id, start, end):
-        reads = Read.query.filter(Read.device_id == device_id,
-                                Read.read_datetime > start,
-                                Read.read_datetime < end).all()
-        return reads
+        print(f"Read saved successfully")

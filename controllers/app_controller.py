@@ -14,6 +14,7 @@ from models.user.user import User
 from models.iot.sensors import Sensor
 from models.iot.actuators import Actuator
 from datetime import datetime
+import paho.mqtt.client as mqtt
 
 
 def create_app():
@@ -52,6 +53,9 @@ def create_app():
 
         TOPICOS_SENSOR = {sensor.topic: sensor for sensor in sensors}
         TOPICOS_ALERT = {actuator.topic: actuator for actuator in actuators}
+
+        print(f"Loaded sensor topics: {TOPICOS_SENSOR.keys()}")
+        print(f"Loaded actuator topics: {TOPICOS_ALERT.keys()}")
 
 
     @login_manager.user_loader
@@ -107,41 +111,66 @@ def create_app():
     
     @mqtt_client.on_connect()
     def handle_connect(client, userdata, flags, rc):
-        if rc == 0:
-            for topic in TOPICOS_SENSOR.keys():
-                mqtt_client.subscribe(topic)
-            for topic in TOPICOS_ALERT.keys():
-                mqtt_client.subscribe(topic)
-        print("Conectado!")
+        with app.app_context():
+            if rc == 0:
+                print("Connection successful")
+                load_topics()
+                for topic in TOPICOS_SENSOR.keys():
+                    mqtt_client.subscribe(topic)
+                    print(f"Subscribed to topic: {topic}")
+                for topic in TOPICOS_ALERT.keys():
+                    mqtt_client.subscribe(topic)
+                    print(f"Subscribed to topic: {topic}")
+            else:
+                print(f"Connection failed with code {rc}")
 
 
     @mqtt_client.on_message()
     def handle_message(client, userdata, message):
         with app.app_context():
+            load_topics()
             topic = message.topic
-            content = json.loads(message.payload.decode())
+            payload = message.payload.decode()
+            content = json.loads(payload)
             
+            print(f"Received message on topic: {topic}")
+            print(f"Message content: {content}")
+
+            # Verifica se o tópico é de um sensor
             if topic in TOPICOS_SENSOR:
                 sensor = TOPICOS_SENSOR[topic]
+                print(f"Processing sensor: {sensor}")
+
+                # Salva a leitura de temperatura, se presente
                 if 'temperature' in content:
-                    temperatura = int(content['temperature'])
+                    temperatura = float(content['temperature'])
+                    print(f"Saving temperature: {temperatura} for topic: {topic}")
                     Read.save_read(topic, temperatura)
 
+                    # Publica alerta se a temperatura estiver alta
                     if temperatura > 35:
                         alerta = "Alerta! Temperatura muito alta"
                         mqtt_client.publish(TOPICOS_ALERT.get('alert_topic', ''), alerta)
 
+                # Salva a leitura de umidade, se presente
                 if 'humidity' in content:
-                    umidade = int(content['humidity'])
+                    umidade = float(content['humidity'])
+                    print(f"Saving humidity: {umidade} for topic: {topic}")
                     Read.save_read(topic, umidade)
 
+                    # Publica alerta se a umidade estiver baixa
                     if umidade < 25:
                         alerta = "Alerta! Umidade muito baixa"
                         mqtt_client.publish(TOPICOS_ALERT.get('alert_topic', ''), alerta)
+
+            # Verifica se o tópico é de um atuador
             elif topic in TOPICOS_ALERT:
                 actuator = TOPICOS_ALERT[topic]
                 mensagem = content.get('value')
+                print(f"Processing actuator: {actuator}, message: {mensagem}")
                 Write.save_write(topic, mensagem)
+
+
 
 
 
